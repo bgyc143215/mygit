@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace对应dao接口全路径-->
+<mapper namespace="com.jxd.mybatis.dao.IEmpDao">
+<!--    设置通用的查询列-->
+    <sql id="baseCol">
+        empno,ename,job,hiredate
+    </sql>
+<!--    id和抽象方法方法名对应-->
+<!--    mybatis根据主键封装对象，resultType对应的是一条对象-->
+    <select id="selectAll" resultType="Emp">
+    select
+    <include refid="baseCol"></include>
+    from emp
+    limit #{pageStart},#{pageLimit}
+    <!--where r &gt; #{pageStart} and r &lt; #{pageLimit}-->
+  </select>
+    <select id="selectByEnameAndJob" resultType="Emp">
+        select
+        <include refid="baseCol"></include>
+        <!--#{}中的值对应的是@Param注解的参数名-->
+        from emp where ename = #{ename} and job = #{job}
+    </select>
+    <insert id="insertEmp" parameterType="Emp">
+     insert into emp(ename,job,hiredate) values(#{ename},#{job},#{hiredate})
+    </insert>
+    <select id="selectByEname" resultType="Emp">
+        <!--当参数为一个时${}中可以写任意名称，一般为属性名-->
+        select <include refid="baseCol"></include>
+        <!--from emp where ename like concat('%',#{ename},'%')-->
+        from emp where ename like '%' #{ename} '%'
+    </select>
+    <select id="selectByOrder" resultType="Emp">
+        select
+        <include refid="baseCol"></include>
+        from emp
+        <!--#{}是字符串替换方式会在变量两边添加单引号
+        ${}是字符串拼接方式，不会有单引号
+        #{}和${}相当于JDBC中的PreparedStatement和statement-->
+        order by ${colName}
+    </select>
+</mapper>

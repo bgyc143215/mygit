@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace对应dao接口全路径-->
+<mapper namespace="com.jxd.mybatis.dao.IEmployeeDao">
+    <select id="selectEmp" resultType="Emp">
+        select empno,ename,job,hiredate from emp
+        <if test="ename !=null and ename !='' ">
+            where ename like '%' #{ename} '%'
+        </if>
+    </select>
+    <select id="selectEmpByjob" resultType="Emp">
+        select empno,ename,job,hiredate from emp
+        <choose>
+            <when test="job !=null and job != ''">
+                where job = #{job}
+            </when>
+            <otherwise>
+                where job = 'coder'
+            </otherwise>
+        </choose>
+    </select>
+    <select id="selectEmpByJobandEname" resultType="Emp">
+        select empno,ename,job,hiredate from emp
+        <where>
+            <if test="job !=null and job !=''">
+                job = #{job}
+            </if>
+            <if test="ename !=null and ename != ''">
+                and ename like '%' #{ename} '%'
+            </if>
+        </where>
+    </select>
+    <delete id="deleteByEmpno">
+    delete from emp where empno in(
+    <foreach collection="array" item="empno" separator=",">
+        #{empno}
+    </foreach>
+    )
+</delete>
+        </mapper>

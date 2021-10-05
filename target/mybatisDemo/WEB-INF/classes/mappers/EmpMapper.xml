@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace对应dao接口全路径-->
+<mapper namespace="com.jxd.mybatis.dao.IEmpDao">
+<!--    id和抽象方法方法名对应-->
+<!--    mybatis根据主键封装对象，resultType对应的是一条对象-->
+    <select id="selectAll" resultType="com.jxd.mybatis.model.Emp">
+    select empno,ename,job,hiredate from emp
+  </select>
+</mapper>

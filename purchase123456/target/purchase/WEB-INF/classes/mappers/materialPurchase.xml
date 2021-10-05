@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace对应接口的全路径-->
+<mapper namespace="com.jxd.purchase.dao.IMaterialPurchaseDao">
+
+    <sql id="basecol">
+        id,apply_user,apply_date,purchase_type,pre_cost,purchase_reason,dept_auti,company_auti
+    </sql>
+    <select id="selectAll" resultType="MaterialPurchase">
+        select
+        <include refid="basecol"></include>
+        from material_purchase
+        where apply_user like '%' #{pname} '%' and purchase_type like '%' #{type} '%'
+    </select>
+
+    <select id="selectAllByPage" resultType="MaterialPurchase">
+        select
+        <include refid="basecol"></include>
+        from material_purchase
+        where apply_user like '%' #{pname} '%' and purchase_type like '%' #{type} '%'
+        limit #{page},#{limit}
+    </select>
+    <delete id="deleteById">
+        delete from material_purchase where id in(
+        <foreach collection="array" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+    <delete id="deleteItemById">
+        delete from material_purchase_item where purchase_id in
+        (
+        <foreach collection="array" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+    <select id="selectById" resultType="MaterialPurchase">
+        select
+        <include refid="basecol"></include>
+        from material_purchase
+        where id = #{id}
+    </select>
+    <update id="updatePurchase" parameterType="MaterialPurchase">
+        update material_purchase set
+        apply_user=#{applyUser},apply_date=#{applyDate},
+        purchase_type=#{purchaseType},pre_cost=#{preCost},
+        purchase_reason=#{purchaseReason},dept_auti=#{deptAuti},
+        company_auti=#{companyAuti}
+        where id = #{id}
+    </update>
+    <insert id="insertPurchase" parameterType="MaterialPurchase">
+        insert into material_purchase(
+        <include refid="basecol"></include>
+        )
+        values(#{id},#{applyUser},#{applyDate},#{purchaseType},#{preCost},#{purchaseReason},#{deptAuti},#{companyAuti})
+    </insert>
+    <select id="selectId" resultType="java.lang.Integer">
+        select max(id) from material_purchase
+    </select>
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace对应接口的全路径-->
+<mapper namespace="com.jxd.purchase.dao.IMaterialPurchaseItemDao">
+    <sql id="col">
+        id,purchase_id,material_name,calc_unit,uint_price,purchase_number,remark
+    </sql>
+    <insert id="insertItems" parameterType="java.util.List">
+        insert into material_purchase_item(purchase_id,material_name,calc_unit,uint_price,purchase_number,remark) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.purchaseId},#{item.materialName},#{item.calcUnit},#{item.uintPrice},#{item.purchaseNumber},#{item.remark})
+        </foreach>
+    </insert>
+    <insert id="insertItemsWithId" parameterType="collection">
+        insert into material_purchase_item(id,purchase_id,material_name,calc_unit,uint_price,purchase_number,remark) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},#{item.purchaseId},#{item.materialName},#{item.calcUnit},#{item.uintPrice},#{item.purchaseNumber},#{item.remark})
+        </foreach>
+    </insert>
+    <select id="selectAll" resultType="MaterialPurchaseItem">
+        select
+        <include refid="col"></include>
+        from material_purchase_item
+        where purchase_id = #{id}
+    </select>
+    <select id="selectAllByPage" resultType="MaterialPurchaseItem">
+        select
+        <include refid="col"></include>
+        from material_purchase_item
+        where purchase_id = #{id}
+        limit #{page},#{limit}
+    </select>
+    <delete id="deleteById" >
+        delete from material_purchase_item where purchase_id = #{purchaseId}
+    </delete>
+</mapper>
